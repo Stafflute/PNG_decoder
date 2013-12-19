@@ -1,0 +1,45 @@
+##################################################
+##########       Template file from   ###########
+######### http://j.mp/gitignoreTemplate ########
+###############################################
+
+#### Eclipse ####
+.classpath
+.project
+.settings/
+
+#### Intellij ####
+.idea/
+*.iml
+*.iws
+
+#### Mac ####
+.DS_Store
+*.DS_Store
+
+#### Maven ####
+log/
+target/
+
+################################
+###### End Template file ######
+##############################
+
+##############################
+#### Added successively #####
+############################
+
+##### Java ####
+*.class
+*.jar
+
+##### Log files and others ####
+*.log
+*.log*
+*.bak
+
+###### Test DBs ######
+database/test
+
+###### Test Pianificazioni ######
+pianificazione
