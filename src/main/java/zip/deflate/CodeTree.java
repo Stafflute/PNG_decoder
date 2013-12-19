@@ -1,4 +1,4 @@
-package nayuki.deflate;
+package zip.deflate;
 
 import java.util.ArrayList;
 import java.util.List;

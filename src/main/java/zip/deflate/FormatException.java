@@ -1,4 +1,4 @@
-package nayuki.deflate;
+package zip.deflate;
 
 
 @SuppressWarnings("serial")

@@ -1,4 +1,4 @@
-package nayuki.deflate;
+package zip.deflate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
