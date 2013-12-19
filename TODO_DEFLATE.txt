@@ -1,0 +1,4 @@
+TODO su Nayuki (ordine decrescente di importanza)
+1 Commentazione
+2 Refactoring (specialmente rinominare i packages)
+3 Ingegnerizzazione
