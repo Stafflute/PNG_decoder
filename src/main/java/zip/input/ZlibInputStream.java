@@ -18,11 +18,10 @@ public class ZlibInputStream extends ByteBitInputStream {
 
     private int index = 0;
 
-    @Override
-    public int read() throws IOException {
+    public int readZlib() throws IOException {
         int bitToGet = getFieldBitSize(index);
         index++;
-
-        return read(bitToGet);  //TODO
+        //TODO passing to DEFLATE
+        return read(bitToGet);
     }
 }
