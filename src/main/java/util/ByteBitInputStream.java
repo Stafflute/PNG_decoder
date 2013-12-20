@@ -1,4 +1,6 @@
-package zip.deflate;
+package util;
+
+import util.BitInputStream;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -8,15 +10,15 @@ import java.io.InputStream;
 /**
  * A stream of bits that can be read.
  */
-public final class ByteBitInputStream implements BitInputStream {
+public class ByteBitInputStream implements BitInputStream {
 	
-	private InputStream input;  // Underlying byte stream to read from
+	protected InputStream input;  // Underlying byte stream to read from
 	
-	private int nextBits;  // Either in the range 0x00 to 0xFF, or -1 if the end of stream is reached
+	protected int nextBits;  // Either in the range 0x00 to 0xFF, or -1 if the end of stream is reached
 	
-	private int bitPosition;  // Always between 1 and 8, inclusive
+	protected int bitPosition;  // Always between 1 and 8, inclusive
 	
-	private boolean isEndOfStream;
+	protected boolean isEndOfStream;
 	
 	
 	
@@ -46,9 +48,18 @@ public final class ByteBitInputStream implements BitInputStream {
 		bitPosition++;
 		return result;
 	}
-	
-	
-	// Reads a bit from the stream. Returns 0 or 1 if a bit is available, or throws an EOFException if the end of stream is reached.
+
+    @Override
+    public int read(int length) throws IOException {
+        int result = 0;
+        for (int i = 0; i < length; i++) {
+            result = read() + (result << 1);
+        }
+        return result;
+    }
+
+
+    // Reads a bit from the stream. Returns 0 or 1 if a bit is available, or throws an EOFException if the end of stream is reached.
 	public int readNoEof() throws IOException {
 		int result = read();
 		if (result != -1)

@@ -1,5 +1,7 @@
 package zip.deflate;
 
+import util.BitInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
