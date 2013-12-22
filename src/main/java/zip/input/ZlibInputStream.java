@@ -47,4 +47,8 @@ public class ZlibInputStream {
     public byte[] readAll() throws IOException {
         return Decompressor.decompress(bitInputStream);
     }
+
+    public void close() throws IOException {
+        bitInputStream.close();
+    }
 }
