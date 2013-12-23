@@ -50,5 +50,7 @@ public class ZlibInputStreamTest {
 
             assertThat(result[i], equalTo(elem));
         }
+
+        expectedFileStream.close();
     }
 }
