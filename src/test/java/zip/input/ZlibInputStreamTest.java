@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.PrintWriter;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class ZlibInputStreamTest {
     InputStream inputStream;
@@ -37,14 +39,16 @@ public class ZlibInputStreamTest {
         testIstantiation();
         byte[] result = zlibInputStream.readAll();
 
-        for(int i = 0; i < result.length; i++) {
-            int resultElab = (result[i] < 0) ? result[i] + 256 : result[i];
-            String aString = String.format("%2s", Integer.toHexString(resultElab)).replace(' ', '0');
-            if (i % 24 == 0) {
-                System.out.print("\n" + aString + " ");
-            } else {
-                System.out.print(aString + " ");
-            }
+        InputStream expectedFileStream =
+                new FileInputStream("src/test/testfiles/blend_sample_1_expected");
+
+        assertThat(result.length, equalTo(expectedFileStream.available()));
+
+        int i = 0;
+        for(i = 0; expectedFileStream.available() > 0; i++) {
+            byte elem = (byte) expectedFileStream.read();
+
+            assertThat(result[i], equalTo(elem));
         }
     }
 }
