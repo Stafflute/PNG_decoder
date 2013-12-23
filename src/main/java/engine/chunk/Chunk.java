@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static util.ByteConverter.*;
+
 public abstract class Chunk {
 
     protected static final int MSB_FACTOR = 256;
@@ -16,7 +18,26 @@ public abstract class Chunk {
 
     protected Byte[] content;
 
-    public abstract void read(InputStream inputStream);
+    protected String type;
+
+    public void read(InputStream inputStream) throws IOException {
+        long length = readLength(inputStream);
+
+        content = new Byte[(int) length];
+
+        readType(inputStream);
+
+        //TODO
+    }
+
+    protected long readLength(InputStream inputStream) throws IOException {
+        byte[] sizeBytes = new byte[BYTE_LONG_LENGTH];
+        inputStream.read(sizeBytes);
+
+        long size = toLong(sizeBytes);
+
+        return size;
+    }
 
     public void write(OutputStream outputStream) throws IOException {
         setContent();
@@ -26,11 +47,12 @@ public abstract class Chunk {
 
         writeContent(outputStream);
 
+        writeCRC32(outputStream);
     }
 
-    protected abstract void writeType(OutputStream outputStream) throws IOException;
+    protected abstract void writeType(OutputStream outputStream) throws IOException; //TODO
 
-    protected abstract void writeContent(OutputStream outputStream) throws IOException;
+    protected abstract void writeContent(OutputStream outputStream) throws IOException; //TODO
 
     private void writeLength(OutputStream outputStream) throws IOException {
         byte[] sizeBytes = new byte[BYTE_LONG_LENGTH];
@@ -57,4 +79,8 @@ public abstract class Chunk {
     }
 
     protected abstract void setContent();
+
+    protected void readType(InputStream inputStream) throws IOException {
+        //TODO
+    }
 }
