@@ -57,12 +57,10 @@ public class ZlibInputStreamTest {
     public void testGetAdler32() throws Exception {
         testIstantiation();
         zlibInputStream.readAll();
-        int[] resultAdler32 = zlibInputStream.getAdler32();
+        long resultAdler32 = zlibInputStream.getAdler32();
 
-        int[] expected = new int[] {0x02, 0x63, 0xF7, 0xC3};
+        long expected = 0x0263F7C3;
 
-        for(int i = 0; i < expected.length; i++) {
-            assertThat(resultAdler32[i], equalTo(expected[i]));
-        }
+        assertThat(resultAdler32, equalTo(expected));
     }
 }

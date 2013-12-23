@@ -26,7 +26,7 @@ public class ZlibInputStream {
     public final int fdict;
     public final int fcheck;
 
-    private int[] adler32;
+    private long adler32;
 
     public ZlibInputStream(InputStream inputStream) throws IOException {
          bitInputStream = new ByteBitInputStream(inputStream);
@@ -53,16 +53,16 @@ public class ZlibInputStream {
     public byte[] readAll() throws IOException {
         byte[] result = Decompressor.decompress(bitInputStream);
 
-        adler32 = new int[ADLER32_BYTE_LENGTH];
+        adler32 = 0;
 
-        for(int i = 0; i < adler32.length; i++) {
-            adler32[i] = bitInputStream.readByte();
+        for(int i = 0; i < ADLER32_BYTE_LENGTH; i++) {
+            adler32 = (adler32 << BYTE_LENGTH) + bitInputStream.readByte();
         }
 
         return result;
     }
 
-    public int[] getAdler32() {
+    public long getAdler32() {
         return adler32;
     }
 

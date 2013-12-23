@@ -2,7 +2,7 @@ package engine.checker.crc;
 
 import java.util.List;
 
-public final class CRC32 extends CRC<Long, List<Character>> {
+public final class CRC32 extends CRC<Long, Byte> {
 
     private static final int BASE = 2;
     private static final int CRC_BIT_LENGTH = 8;
@@ -12,18 +12,18 @@ public final class CRC32 extends CRC<Long, List<Character>> {
     private static final long HEADER = 0xffffffffL;
     private static final long WINDOW = 0xffL;
 
-    private final Long[] crcTable = new Long[CRC_LENGTH];
+    private static final Long[] crcTable = new Long[CRC_LENGTH];
 
-    public CRC32() {
+    static {
         updateTable();
     }
 
     @Override
-    public Long encode(List<Character> characters) {
+    public Long encode(Byte[] bytes) {
         Long crc = HEADER;
 
-        for (int i = 0; i < characters.size(); i++) {
-            int calculatedIndex = (int) ((crc ^ characters.get(i)) & WINDOW);
+        for (int i = 0; i < bytes.length; i++) {
+            int calculatedIndex = (int) ((crc ^ bytes[i]) & WINDOW);
             crc = crcTable[calculatedIndex] ^ (crc >> CRC_BIT_LENGTH);
         }
 
@@ -32,7 +32,7 @@ public final class CRC32 extends CRC<Long, List<Character>> {
         return crc;
     }
 
-    private void updateTable() {
+    private static void updateTable() {
         Long temp;
 
         for (int i = 0; i < CRC_LENGTH; i++) {
