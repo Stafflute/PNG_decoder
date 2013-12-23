@@ -44,13 +44,25 @@ public class ZlibInputStreamTest {
 
         assertThat(result.length, equalTo(expectedFileStream.available()));
 
-        int i = 0;
-        for(i = 0; expectedFileStream.available() > 0; i++) {
+        for(byte b : result) {
             byte elem = (byte) expectedFileStream.read();
 
-            assertThat(result[i], equalTo(elem));
+            assertThat(b, equalTo(elem));
         }
 
         expectedFileStream.close();
+    }
+
+    @Test
+    public void testGetAdler32() throws Exception {
+        testIstantiation();
+        zlibInputStream.readAll();
+        int[] resultAdler32 = zlibInputStream.getAdler32();
+
+        int[] expected = new int[] {0x02, 0x63, 0xF7, 0xC3};
+
+        for(int i = 0; i < expected.length; i++) {
+            assertThat(resultAdler32[i], equalTo(expected[i]));
+        }
     }
 }

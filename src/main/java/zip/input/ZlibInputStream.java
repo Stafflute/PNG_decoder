@@ -13,6 +13,10 @@ import static zip.structure.ZlibHeaderStructure.*;
  */
 public class ZlibInputStream {
 
+    private final static int BYTE_LENGTH = 8;
+    private final static int ADLER32_BYTE_LENGTH =
+            getFieldBitSize(ADLER32) / BYTE_LENGTH;
+
     private final BitInputStream bitInputStream;
 
     public final int cinfo;
@@ -21,6 +25,8 @@ public class ZlibInputStream {
     public final int flevel;
     public final int fdict;
     public final int fcheck;
+
+    private int[] adler32;
 
     public ZlibInputStream(InputStream inputStream) throws IOException {
          bitInputStream = new ByteBitInputStream(inputStream);
@@ -45,7 +51,19 @@ public class ZlibInputStream {
     }
 
     public byte[] readAll() throws IOException {
-        return Decompressor.decompress(bitInputStream);
+        byte[] result = Decompressor.decompress(bitInputStream);
+
+        adler32 = new int[ADLER32_BYTE_LENGTH];
+
+        for(int i = 0; i < adler32.length; i++) {
+            adler32[i] = bitInputStream.readByte();
+        }
+
+        return result;
+    }
+
+    public int[] getAdler32() {
+        return adler32;
     }
 
     public void close() throws IOException {
