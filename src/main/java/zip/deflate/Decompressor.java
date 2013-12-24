@@ -10,8 +10,7 @@ import java.util.Arrays;
 
 public final class Decompressor {
 	
-	/* Public method */
-	
+
 	public static byte[] decompress(BitInputStream in) throws IOException {
 		Decompressor decomp = new Decompressor(in);
 		return decomp.output.toByteArray();
@@ -19,8 +18,7 @@ public final class Decompressor {
 	
 	
 	
-	/* Private members */
-	
+
 	private BitInputStream input;
 	
 	private ByteArrayOutputStream output;
@@ -66,7 +64,7 @@ public final class Decompressor {
 	}
 	
 	
-	// For handling static Huffman codes (btype = 1)
+    // Per la gestione statica dei codici di Huffman (btype = 1)
 	
 	private static CodeTree fixedLiteralLengthCode;
 	private static CodeTree fixedDistanceCode;
@@ -85,8 +83,9 @@ public final class Decompressor {
 	}
 	
 	
-	// For handling dynamic Huffman codes (btype = 2)
-	private CodeTree[] decodeHuffmanCodes(BitInputStream in) throws IOException {
+    // Per la gestione statica dei codici di Huffman (btype = 2)
+
+    private CodeTree[] decodeHuffmanCodes(BitInputStream in) throws IOException {
 		int numLitLenCodes = readInt(5) + 257;  // hlit  + 257
 		int numDistCodes = readInt(5) + 1;      // hdist +   1
 		
@@ -137,14 +136,14 @@ public final class Decompressor {
 		if (runLen > 0)
 			throw new FormatException("Run exceeds number of codes");
 		
-		// Create code trees
+        // Crea un code tree
 		int[] litLenCodeLen = Arrays.copyOf(codeLens, numLitLenCodes);
 		CodeTree litLenCode = new CanonicalCode(litLenCodeLen).toCodeTree();
 		
 		int[] distCodeLen = Arrays.copyOfRange(codeLens, numLitLenCodes, codeLens.length);
 		CodeTree distCode;
 		if (distCodeLen.length == 1 && distCodeLen[0] == 0)
-			distCode = null;  // Empty distance code; the block shall be all literal symbols
+			distCode = null;   // Codice di distanza vuota; il blocco conterrà simboli literali
 		else
 			distCode = new CanonicalCode(distCodeLen).toCodeTree();
 		
@@ -152,10 +151,10 @@ public final class Decompressor {
 	}
 	
 	
-	/* Block decompression methods */
+    /* Blocco di metodi di decompressione */
 	
 	private void decompressUncompressedBlock() throws IOException {
-		// Discard bits to align to byte boundary
+       // Scarta bit per allinearsi al limite di byte
 		while (input.getBitPosition() != 0)
 			input.readNoEof();
 		
@@ -165,7 +164,7 @@ public final class Decompressor {
 		if ((len ^ 0xFFFF) != nlen)
 			throw new FormatException("Invalid length in uncompressed block");
 		
-		// Copy bytes
+        // Copia byte
 		for (int i = 0; i < len; i++) {
 			int temp = input.readByte();
 			if (temp == -1)
@@ -185,10 +184,10 @@ public final class Decompressor {
 			if (sym == 256)  // End of block
 				break;
 			
-			if (sym < 256) {  // Literal byte
+			if (sym < 256) {  // Byte letterale
 				output.write(sym);
 				dictionary.append(sym);
-			} else {  // Length and distance for copying
+			} else {   // Lunghezza e distanza per copiare
 				int len = decodeRunLength(sym);
 				if (distCode == null)
 					throw new FormatException("Length symbol encountered with empty distance code");
@@ -200,7 +199,7 @@ public final class Decompressor {
 	}
 	
 	
-	/* Symbol decoding methods */
+    /* Metodi di decodifica dei simboli */
 	
 	private int decodeSymbol(CodeTree code) throws IOException {
 		InternalNode currentNode = code.root;
@@ -227,7 +226,7 @@ public final class Decompressor {
 		else if (sym <= 264)
 			return sym - 254;
 		else if (sym <= 284) {
-			int i = (sym - 261) / 4;  // Number of extra bits to read
+			int i = (sym - 261) / 4;  // Numero di extra bit da leggere
 			return (((sym - 265) % 4 + 4) << i) + 3 + readInt(i);
 		} else  // sym == 285
 			return 258;
@@ -238,14 +237,14 @@ public final class Decompressor {
 		if (sym <= 3)
 			return sym + 1;
 		else if (sym <= 29) {
-			int i = sym / 2 - 1;  // Number of extra bits to read
+			int i = sym / 2 - 1;  // Numero di extra bit da leggere
 			return ((sym % 2 + 2) << i) + 1 + readInt(i);
 		} else
 			throw new FormatException("Invalid distance symbol: " + sym);
 	}
 	
 	
-	/* Utility method */
+    /* Metodo di utility */
 	
 	private int readInt(int numBits) throws IOException {
 		if (numBits < 0 || numBits >= 32)
