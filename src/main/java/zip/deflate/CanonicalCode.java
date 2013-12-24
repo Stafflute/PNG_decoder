@@ -5,23 +5,26 @@ import java.util.List;
 
 
 /**
- * A canonical Huffman code. Immutable. Code length 0 means no code.
+ * Un codice canonico di Huffman. Immutabile. Codice di lunghezza 0 vuol dire nessun codice.
  */
 /*
- * A canonical Huffman code only describes the code length of each symbol. The codes can be reconstructed from this information. In this implementation, symbols with lower code lengths, breaking ties by lower symbols, are assigned lexicographically lower codes.
- * Example:
- *   Code lengths (canonical code):
- *     Symbol A: 1
- *     Symbol B: 3
- *     Symbol C: 0 (no code)
- *     Symbol D: 2
- *     Symbol E: 3
- *   Huffman codes (generated from canonical code):
- *     Symbol A: 0
- *     Symbol B: 110
- *     Symbol C: None
- *     Symbol D: 10
- *     Symbol E: 111
+ * A canonical Huffman code only describes the code length of each symbol. The codes can be reconstructed from this information.
+ * Un codice canonico di Huffman descrive solamente la lunghezza del codice di ciascun simbolo.
+ * I codice possono essere ricostruiti da questa informazione.
+ * In questa implementazione, i simboli con una lunghezza di codice minore, vengono assegnati codici più piccoli lessicograficamente.
+ * Esempio:
+ *   Lunghezza dei codici (codice canonico):
+ *     Simbolo A: 1
+ *     Simbolo B: 3
+ *     Simbolo C: 0 (no code)
+ *     Simbolo D: 2
+ *     Simbolo E: 3
+ *   Codici di Huffman (generati dal codice canonico):
+ *     Simbolo A: 0
+ *     Simbolo B: 110
+ *     Simbolo C: None
+ *     Simbolo D: 10
+ *     Simbolo E: 111
  */
 final class CanonicalCode {
 	
@@ -29,7 +32,7 @@ final class CanonicalCode {
 	
 	
 	
-	// The constructor does not check that the array of code lengths results in a complete Huffman tree, being neither underfilled nor overfilled.
+    // Il costruttore non verifica che l'array delle lunghezze dei codici in un albero completo di Huffman sia sottoriempito o sovrariempito.
 	public CanonicalCode(int[] codeLengths) {
 		if (codeLengths == null)
 			throw new NullPointerException("Argument is null");
@@ -41,7 +44,7 @@ final class CanonicalCode {
 	}
 	
 	
-	// Builds a canonical code from the given code tree.
+    // Costruisce un codice canonico dall'albero di codice in input
 	public CanonicalCode(CodeTree tree, int symbolLimit) {
 		codeLengths = new int[symbolLimit];
 		buildCodeLengths(tree.root, 0);
@@ -56,7 +59,7 @@ final class CanonicalCode {
 		} else if (node instanceof Leaf) {
 			int symbol = ((Leaf)node).symbol;
 			if (codeLengths[symbol] != 0)
-				throw new AssertionError("Symbol has more than one code");  // Because CodeTree has a checked constraint that disallows a symbol in multiple leaves
+				throw new AssertionError("Symbol has more than one code"); // Perché il CodeTree ha un controllo di vincolo che non permette di avere un simbolo in diverse foglie
 			if (symbol >= codeLengths.length)
 				throw new IllegalArgumentException("Symbol exceeds symbol limit");
 			codeLengths[symbol] = depth;
@@ -81,16 +84,16 @@ final class CanonicalCode {
 	
 	public CodeTree toCodeTree() {
 		List<Node> nodes = new ArrayList<Node>();
-		for (int i = max(codeLengths); i >= 1; i--) {  // Descend through positive code lengths
+		for (int i = max(codeLengths); i >= 1; i--) {  // Decresce a partire da lunghezze di codice positive
 			List<Node> newNodes = new ArrayList<Node>();
 			
-			// Add leaves for symbols with code length i
+            // Aggiunge nuove foglie per i simboli con lunghezza di codice i
 			for (int j = 0; j < codeLengths.length; j++) {
 				if (codeLengths[j] == i)
 					newNodes.add(new Leaf(j));
 			}
 			
-			// Merge nodes from the previous deeper layer
+            // Unisce nodi del livello più basso precedente
 			for (int j = 0; j < nodes.size(); j += 2)
 				newNodes.add(new InternalNode(nodes.get(j), nodes.get(j + 1)));
 			
