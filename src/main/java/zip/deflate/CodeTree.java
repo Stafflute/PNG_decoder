@@ -5,26 +5,27 @@ import java.util.List;
 
 
 /**
- * A binary tree where each leaf codes a symbol, for representing Huffman codes. Immutable.
+ * Un albero binario dove ogni foglia rappresenta il codice di un simbolo, per rappresentare i codici di Huffman. Non modificabile.
  */
 /*
- * There are two main uses of a CodeTree:
- * - Read the 'root' field and walk through the tree to extract the desired information.
- * - Call getCode() to get the code for a symbol, provided that the symbol has a code.
+ * Ci sono due principali usi per un CodeTree
+ * - Leggi il campo 'root' e percorri l'albero per estrarre l'informazione desiderata.
+ * - Chiama getCode() per avere il codice di un simbolo, supposto che il simbolo abbia un codice associato.
  * 
- * The path to a leaf node determines the leaf's symbol's code. Starting from the root, going to the left child represents a 0, and going to the right child represents a 1.
- * Constraints:
- * - The tree must be complete, i.e. every leaf must have a symbol.
- * - No symbol occurs in two leaves.
- * - But not every symbol needs to be in the tree.
- * - The root must not be a leaf node.
- * Example:
- *   Huffman codes:
- *     0: Symbol A
- *     10: Symbol B
- *     110: Symbol C
- *     111: Symbol D
- *   Code tree:
+ * Il percorso per raggiungere una foglia determina il codice del simbolo associato alla foglia.
+ * Partendo dalla radice, andando al figlio di sinistra si rappresenta uno 0, mentre andando a destra si rapppresenta un 1.
+ * Vincoli:
+ * - L'albero deve essere completo, cioè ogni foglia deve essere associata ad un simbolo.
+ * - Nessun simbolo è ripetuto in due o più foglie.
+ * - Ma non tutti i simboli devono necessariamente essere nell'albero.
+ * - La radice non può essere una foglia.
+ * Esempio:
+ *   Codici di Huffman:
+ *     0: Simbolo A
+ *     10: Simbolo B
+ *     110: Simbolo C
+ *     111: Simbolo D
+ *   Albero dei Codici:
  *       .
  *      / \
  *     A   .
@@ -37,22 +38,22 @@ final class CodeTree {
 	
 	public final InternalNode root;  // Not null
 	
-	// Stores the code for each symbol, or null if the symbol has no code.
-	// For example, if symbol 5 has code 10011, then codes.get(5) is the list [1, 0, 0, 1, 1].
+    // Memorizza il codice per ogni simbolo. È null se il simbolo non è stato codificato.
+    // Per esempio, se il simbolo è ha codice 10011, allora codes.get(5) è la lista [1, 0, 0, 1, 1].
 	private List<List<Integer>> codes;
 	
 	
 	
-	// Every symbol in the tree 'root' must be strictly less than 'symbolLimit'.
+    // ogni simbolo nella radice dell'albero deve essere strettamente minore di 'symbolLimit'.
 	public CodeTree(InternalNode root, int symbolLimit) {
 		if (root == null)
 			throw new NullPointerException("Argument is null");
 		this.root = root;
 		
-		codes = new ArrayList<List<Integer>>();  // Initially all null
+		codes = new ArrayList<List<Integer>>();  // Inizialmente tutto null
 		for (int i = 0; i < symbolLimit; i++)
 			codes.add(null);
-		buildCodeList(root, new ArrayList<Integer>());  // Fills 'codes' with appropriate data
+		buildCodeList(root, new ArrayList<Integer>());  // Riempie 'codes' con i dati appropriati
 	}
 	
 	
@@ -93,7 +94,8 @@ final class CodeTree {
 	}
 	
 	
-	// Returns a string showing all the codes in this tree. The format is subject to change. Useful for debugging.
+    // Ritorna una stringa contenente tutti i codice dell'albero.
+    // Il formato è soggetto a cambiamenti. Utile per il debug.
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		toString("", root, sb);
@@ -118,7 +120,7 @@ final class CodeTree {
 
 
 /**
- * A node in a code tree. This class has two and only two subclasses: InternalNode, Leaf.
+ * Un nodo in un code tree. Questa classe ha esattamente due sottoclassi: InternalNode, Leaf
  */
 abstract class Node {
 	
@@ -127,7 +129,7 @@ abstract class Node {
 
 
 /**
- * An internal node in a code tree. It has two nodes as children. Immutable.
+ * Un nodo interno in un code tree. Ha due nodi come figli. Non modificabile.
  */
 final class InternalNode extends Node {
 	
@@ -144,7 +146,7 @@ final class InternalNode extends Node {
 
 
 /**
- * A leaf node in a code tree. It has a symbol value. Immutable.
+ * Una foglia un un code tree. Ha un simbolo come valore. Immutabile.
  */
 final class Leaf extends Node {
 	
