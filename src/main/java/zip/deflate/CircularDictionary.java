@@ -18,7 +18,7 @@ final class CircularDictionary {
 		data = new byte[size];
 		index = 0;
 		
-		if (size > 0 && (size & (size - 1)) == 0)  // Test if size is a power of 2
+		if (size > 0 && (size & (size - 1)) == 0)  // Controlla se la grandezza è una potenza di 2
 			mask = size - 1;
 		else
 			mask = 0;
