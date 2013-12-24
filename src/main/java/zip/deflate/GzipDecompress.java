@@ -17,7 +17,7 @@ import java.util.zip.CRC32;
 public class GzipDecompress {
 	
 	public static void main(String[] args) throws IOException {
-		// Check arguments
+        // Controllo degli argomenti
 		if (args.length != 2) {
 			System.err.println("Usage: java GzipDecompress InputFile OutputFile");
 			System.exit(1);
@@ -32,7 +32,7 @@ public class GzipDecompress {
 			System.exit(1);
 		}
 		
-		// Start reading
+        // Inizio lettura
 		DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(inFile), 16 * 1024));
 		byte[] b;
 		
@@ -45,25 +45,25 @@ public class GzipDecompress {
 			throw new RuntimeException("Unsupported compression method: " + (b[2] & 0xFF));
 		int flags = b[3] & 0xFF;
 		
-		// Reserved flags
+
 		if ((flags & 0xE0) != 0)
 			throw new RuntimeException("Reserved flags are set");
 		
-		// Modification time
+		// Tempo di ultima modifica
 		int mtime = (b[4] & 0xFF) | (b[5] & 0xFF) << 8 | (b[6] & 0xFF) << 16 | (b[7] & 0xFF) << 24;
 		if (mtime != 0)
 			System.out.println("Last modified: " + new Date(mtime * 1000L));
 		else
 			System.out.println("Last modified: N/A");
 		
-		// Extra flags
+		// Extra flag
 		switch (b[8] & 0xFF) {
 			case 2:   System.out.println("Extra flags: Maximum compression");  break;
 			case 4:   System.out.println("Extra flags: Fastest compression");  break;
 			default:  System.out.println("Extra flags: Unknown");  break;
 		}
 		
-		// Operating system
+        // Sistema operativo
 		String os;
 		switch (b[9] & 0xFF) {
 			case   0:  os = "FAT";             break;
@@ -85,7 +85,6 @@ public class GzipDecompress {
 		}
 		System.out.println("Operating system: " + os);
 		
-		// Text flag
 		if ((flags & 0x01) != 0)
 			System.out.println("Flag: Text");
 		
@@ -98,14 +97,13 @@ public class GzipDecompress {
 			in.readFully(new byte[len]);  // Skip extra data
 		}
 		
-		// File name flag
 		if ((flags & 0x08) != 0) {
 			StringBuilder sb = new StringBuilder();
 			while (true) {
 				int temp = in.readByte();
 				if (temp == -1)
 					throw new EOFException();
-				else if (temp == 0)  // Null-terminated string
+				else if (temp == 0)  // Stringa terminante con null
 					break;
 				else
 					sb.append((char)temp);
@@ -113,21 +111,21 @@ public class GzipDecompress {
 			System.out.println("File name: " + sb.toString());
 		}
 		
-		// Header CRC flag
+        // Flag dell'header CRC
 		if ((flags & 0x02) != 0) {
 			b = new byte[2];
 			in.readFully(b);
 			System.out.printf("Header CRC-16: %04X%n", (b[0] & 0xFF) | (b[1] & 0xFF) << 8);
 		}
 		
-		// Comment flag
+        // Flag di commento
 		if ((flags & 0x10) != 0) {
 			StringBuilder sb = new StringBuilder();
 			while (true) {
 				int temp = in.readByte();
 				if (temp == -1)
 					throw new EOFException();
-				else if (temp == 0)  // Null-terminated string
+				else if (temp == 0)  // Stringa terminante con null
 					break;
 				else
 					sb.append((char)temp);
@@ -135,7 +133,7 @@ public class GzipDecompress {
 			System.out.println("Comment: " + sb.toString());
 		}
 		
-		// Decompress
+		// Decompressione
 		byte[] decomp = Decompressor.decompress(new ByteBitInputStream(in));
 		
 		// Footer
@@ -146,13 +144,13 @@ public class GzipDecompress {
 		int size = (b[0] & 0xFF) | (b[1] & 0xFF) << 8 | (b[2] & 0xFF) << 16 | (b[3] & 0xFF) << 24;
 		in.close();
 		
-		// Check
+		// Controllo
 		if (size != decomp.length)
 			throw new RuntimeException(String.format("Size mismatch: expected=%d, actual=%d", size, decomp.length));
 		if (crc != getCrc32(decomp))
 			throw new RuntimeException(String.format("CRC-32 mismatch: expected=%08X, actual=%08X", crc, getCrc32(decomp)));
 		
-		// Write decompressed data to output file
+		// Scrive i dati decompressi nel file di output
 		OutputStream out = new FileOutputStream(args[1]);
 		out.write(decomp);
 		out.close();
