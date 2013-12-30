@@ -18,7 +18,14 @@ public class IHDRChunk extends Chunk{
 
     @Override
     protected void setContent() {
-        //TODO
+        int pos = 0;
+
+        pos = setLong(weight, pos);
+        pos = setLong(height, pos);
+        pos = setByte(depth, pos);
+        pos = setByte(colourType, pos);
+        pos = setByte(filterMethod, pos);
+        pos = setByte(interlaceMethod, pos);
     }
 
     @Override

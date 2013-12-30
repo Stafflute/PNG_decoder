@@ -157,4 +157,20 @@ public abstract class Chunk {
 
         readCRC32(inputStream);
     }
+
+    protected int setLong(long aLong, int pos) {
+        byte[] bytes = to4Byte(aLong);
+
+        for(int i = 0; i < BYTE_LONG_LENGTH; i++) {
+            content[pos + i] = bytes[i];
+        }
+
+        return pos + BYTE_LONG_LENGTH;
+    }
+
+    protected int setByte(int anInt, int pos) {
+        content[pos] = (byte) anInt;
+
+        return ++pos;
+    }
 }
