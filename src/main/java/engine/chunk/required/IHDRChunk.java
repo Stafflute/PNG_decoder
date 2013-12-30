@@ -5,9 +5,11 @@ import engine.chunk.Chunk;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static util.ByteConverter.*;
+
 public class IHDRChunk extends Chunk{
 
-    private long length;
+    private long weight;
     private long height;
     private int depth;
     private int colourType;
@@ -21,7 +23,20 @@ public class IHDRChunk extends Chunk{
 
     @Override
     protected void readContent(InputStream inputStream) throws IOException {
-        //TODO
+        byte[] byteLong;
+
+        byteLong = new byte[BYTE_LONG_LENGTH];
+        inputStream.read(byteLong);
+        weight = toLong(byteLong);
+
+        byteLong = new byte[BYTE_LONG_LENGTH];
+        inputStream.read(byteLong);
+        height = toLong(byteLong);
+
+        depth = inputStream.read();
+        colourType = inputStream.read();
+        filterMethod = inputStream.read();
+        interlaceMethod = inputStream.read();
     }
 
     public int getInterlaceMethod() {
@@ -32,12 +47,12 @@ public class IHDRChunk extends Chunk{
         this.interlaceMethod = interlaceMethod;
     }
 
-    public long getLength() {
-        return length;
+    public long getWeight() {
+        return weight;
     }
 
-    public void setLength(long length) {
-        this.length = length;
+    public void setWeight(long weight) {
+        this.weight = weight;
     }
 
     public long getHeight() {
