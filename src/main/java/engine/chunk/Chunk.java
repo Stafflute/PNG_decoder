@@ -69,7 +69,7 @@ public abstract class Chunk {
 
     protected abstract void setContent();
 
-    protected long readLength(InputStream inputStream) throws IOException {
+    protected static long readLength(InputStream inputStream) throws IOException {
         byte[] sizeBytes = new byte[BYTE_LONG_LENGTH];
         inputStream.read(sizeBytes);
 
@@ -99,5 +99,62 @@ public abstract class Chunk {
         if(crc.check(content, crc32)) {
             throw new notValidCRCException();
         }
+    }
+
+    private static final String SPECIFIC_PACKAGE = Chunk.class.getPackage().toString() + ".specific.";
+    private static final String CLASS_CHUNK_NAME = Chunk.class.getSimpleName();
+
+    /**
+     * Legge una chunk in base all'input stream.
+     * In base al tipo di chunk letto istanzia in base al tipo letto.
+     * Se il tipo non è riconosciuto restituisce un chunk di tipo UnknownChunk.
+     *
+     * @param inputStream sorgente in input desiderata
+     * @return chunk letto
+     * @throws IOException
+     */
+    public static Chunk readChunk(InputStream inputStream) throws IOException {
+        Chunk chunk = null;
+
+        long length = readLength(inputStream);
+
+        byte[] typeBytes = new byte[BYTE_LONG_LENGTH];
+        inputStream.read(typeBytes);
+
+        String type = new String(typeBytes);
+
+        try {
+
+            Class classType = Class.forName(SPECIFIC_PACKAGE + type + CLASS_CHUNK_NAME);
+            chunk = (Chunk) classType.newInstance();
+            chunk.read(inputStream, length, typeBytes);
+
+        } catch (ClassNotFoundException e) {
+
+            System.err.println("Chunk not found");
+            chunk = new UnknownChunk();
+            inputStream.skip(length + BYTE_LONG_LENGTH);
+
+        } catch (InstantiationException e) {
+            //ERROR
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            //ERROR
+            e.printStackTrace();
+        }
+
+        return chunk;
+    }
+
+    private void read(InputStream inputStream, long length, byte[] typeBytes) throws IOException {
+        content = new Byte[(int) length];
+
+        this.typeBytes = typeBytes;
+
+        type = new String(typeBytes);
+
+        readContent(inputStream);
+
+        readCRC32(inputStream);
     }
 }
