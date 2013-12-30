@@ -18,7 +18,7 @@ public class IHDRChunk extends Chunk{
 
     private static final int IHDR_CHUNK_LENGTH = 12;
 
-    private static final byte[] IHDR_TYPE_BYTES = new byte[]{0x49, 0x48, 0x44, 0x52};
+    private static final byte[] IHDR_TYPE_BYTES = new byte[]{'I', 'H', 'D', 'R'};
 
     protected byte[] typeBytes = IHDR_TYPE_BYTES;
     protected String type = new String(typeBytes);
