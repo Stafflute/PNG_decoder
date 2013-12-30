@@ -16,8 +16,17 @@ public class IHDRChunk extends Chunk{
     private int filterMethod;
     private int interlaceMethod;
 
+    private static final int IHDR_CHUNK_LENGTH = 12;
+
+    private static final byte[] IHDR_TYPE_BYTES = new byte[]{0x49, 0x48, 0x44, 0x52};
+
+    protected byte[] typeBytes = IHDR_TYPE_BYTES;
+    protected String type = new String(typeBytes);
+
     @Override
     protected void setContent() {
+        content = new Byte[IHDR_CHUNK_LENGTH];
+
         int pos = 0;
 
         pos = setLong(weight, pos);
