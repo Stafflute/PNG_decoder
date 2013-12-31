@@ -1,22 +1,24 @@
 package engine.structure.scanline;
 
 import engine.structure.filter.Filter;
+import engine.structure.filter.FilterFactory;
 import engine.structure.pixel.Pixel;
 import engine.structure.pixel.format.PixelFormat;
 
 import static engine.structure.pixel.NullPixel.*;
 import static engine.structure.filter.Filter.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scanline {
     public final Filter filter;
     public final List<Pixel> pixelList;
 
-    private final byte FILTER_BYTE = 1;
-    private final byte FILTER_BYTE_POSITION = 0;
-    private final byte FIRST = 0;
-    private final byte FIRST_BYTE_PIXEL_POSITION = 1;
+    private final static byte FILTER_BYTE = 1;
+    private final static byte FIRST = 0;
+    private final static byte FILTER_BYTE_POSITION = FIRST;
+    private final static byte FIRST_BYTE_PIXEL_POSITION = FILTER_BYTE_POSITION + 1;
 
     public Scanline(Filter filter, List<Pixel> pixelList) {
         this.filter = filter;
@@ -24,8 +26,7 @@ public class Scanline {
     }
 
     public byte[] getCode(Scanline previousScanline) {
-        Scanline defaultPreviousScanline = (Scanline) previousScanline;
-        List<Pixel> previousPixelList = defaultPreviousScanline.pixelList;
+        List<Pixel> previousPixelList = previousScanline.pixelList;
 
         int pixelByteSize = pixelList.get(FIRST).getByteSize();
         int byteSize = pixelByteSize * pixelList.size();
@@ -33,7 +34,7 @@ public class Scanline {
 
         byte[] result = new byte[byteSize];
 
-        result[FIRST] = filter.getFilterType();
+        result[FILTER_BYTE_POSITION] = filter.getFilterType();
 
         int j = 0;
         for (int i = FIRST_BYTE_PIXEL_POSITION; i < result.length; i += pixelByteSize) {
@@ -44,7 +45,7 @@ public class Scanline {
             Pixel b = null;
             Pixel c = null;
 
-            boolean isFirstPixel = (j == 0);
+            boolean isFirstPixel = (j == FIRST);
             boolean hasPreviousScanline = (previousScanline == null);
 
             if (isFirstPixel) {
@@ -81,6 +82,16 @@ public class Scanline {
     }
 
     public static Scanline readScanline(byte[] bytes, PixelFormat format) {
+        byte filterByte = bytes[FILTER_BYTE_POSITION];
+        Filter filter = FilterFactory.getFilter(filterByte);
+
+        List<Pixel> pixelList = new ArrayList<>();
+
+
+
+        Scanline result = null;
+
+
 
         return  null;//TODO
     }
