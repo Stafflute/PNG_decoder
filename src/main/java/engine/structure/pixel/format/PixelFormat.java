@@ -1,7 +1,15 @@
 package engine.structure.pixel.format;
 
+import static engine.structure.pixel.format.ColorType.*;
+
 public class PixelFormat {
-    //TODO
+    public final ColorType colorType;
+    public final int depth;
+
+    public PixelFormat(int colorTypeByte, int depth) {
+        this.colorType = getColorType(colorTypeByte);
+        this.depth = depth;
+    }
 
     public int getByteSize() {
         //TODO
