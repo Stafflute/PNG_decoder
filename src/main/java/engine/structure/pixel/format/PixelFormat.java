@@ -27,4 +27,8 @@ public class PixelFormat {
     public int getByteSize() {
         return colorType.byteSize * depthByteSize;
     }
+
+    public boolean is16Bit() {
+        return depth == BIT16;
+    }
 }
