@@ -1,6 +1,6 @@
 package engine.structure.pixel;
 
-public class NullPixel implements Pixel{
+public class NullPixel extends Pixel{
 
     public final static Pixel NULL_PIXEL = new NullPixel();
 
