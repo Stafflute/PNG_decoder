@@ -18,8 +18,6 @@ public class Scanline {
     private final byte FIRST = 0;
     private final byte FIRST_BYTE_PIXEL_POSITION = 1;
 
-    private final static int MAX_NUMBER_OF_PARAMETERS = 3;
-
     public Scanline(Filter filter, List<Pixel> pixelList) {
         this.filter = filter;
         this.pixelList = pixelList;
@@ -39,13 +37,14 @@ public class Scanline {
 
         int j = 0;
         for (int i = FIRST_BYTE_PIXEL_POSITION; i < result.length; i += pixelByteSize) {
-            Pixel[] pixels = new Pixel[MAX_NUMBER_OF_PARAMETERS];
+            Pixel[] pixels = new Pixel[MAX_NUMBER_OF_FILTER_PARAMETERS];
 
+            Pixel x = pixelList.get(j);
             Pixel a = null;
             Pixel b = null;
             Pixel c = null;
 
-            boolean isFirstPixel = (i == FIRST_BYTE_PIXEL_POSITION);
+            boolean isFirstPixel = (j == 0);
             boolean hasPreviousScanline = (previousScanline == null);
 
             if (isFirstPixel) {
@@ -66,6 +65,7 @@ public class Scanline {
                 c = previousPixelList.get(j - 1);
             }
 
+            pixels[X] = x;
             pixels[A] = a;
             pixels[B] = b;
             pixels[C] = c;

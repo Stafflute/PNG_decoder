@@ -9,7 +9,10 @@ public interface Filter {
 
     public byte getFilterType();
 
-    public static final int A = 0;
-    public static final int B = 1;
-    public static final int C = 2;
+    public static final int X = 0;
+    public static final int A = 1;
+    public static final int B = 2;
+    public static final int C = 3;
+
+    public final static int MAX_NUMBER_OF_FILTER_PARAMETERS = 4;
 }
