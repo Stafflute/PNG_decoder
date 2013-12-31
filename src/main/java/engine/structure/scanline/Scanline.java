@@ -3,6 +3,7 @@ package engine.structure.scanline;
 import engine.structure.filter.Filter;
 import engine.structure.filter.FilterFactory;
 import engine.structure.pixel.Pixel;
+import engine.structure.pixel.PixelFactory;
 import engine.structure.pixel.format.PixelFormat;
 
 import static engine.structure.pixel.NullPixel.*;
@@ -26,7 +27,12 @@ public class Scanline {
     }
 
     public byte[] getCode(Scanline previousScanline) {
-        List<Pixel> previousPixelList = previousScanline.pixelList;
+        List<Pixel> previousPixelList = null;
+        boolean hasPreviousScanline = (previousScanline == null);
+
+        if (hasPreviousScanline) {
+            previousPixelList = previousScanline.pixelList;
+        }
 
         int pixelByteSize = pixelList.get(FIRST).getByteSize();
         int byteSize = pixelByteSize * pixelList.size();
@@ -46,7 +52,6 @@ public class Scanline {
             Pixel c = null;
 
             boolean isFirstPixel = (j == FIRST);
-            boolean hasPreviousScanline = (previousScanline == null);
 
             if (isFirstPixel) {
                 a = NULL_PIXEL;
@@ -81,18 +86,64 @@ public class Scanline {
         return result;
     }
 
-    public static Scanline readScanline(byte[] bytes, PixelFormat format) {
+    public static Scanline readScanline(byte[] bytes, PixelFormat format, Scanline previousScanline) {
+        List<Pixel> previousPixelList = null;
+        boolean hasPreviousScanline = (previousScanline == null);
+
+        if (hasPreviousScanline) {
+            previousPixelList = previousScanline.pixelList;
+        }
+
         byte filterByte = bytes[FILTER_BYTE_POSITION];
         Filter filter = FilterFactory.getFilter(filterByte);
 
+        int pixelByteSize = format.getByteSize();
+
         List<Pixel> pixelList = new ArrayList<>();
 
+        int j = 0;
+        for (int i = FIRST_BYTE_PIXEL_POSITION; i < bytes.length; i += pixelByteSize) {
+            byte[] filteredPixelBytes = new byte[pixelByteSize];
+            System.arraycopy(bytes, i, filteredPixelBytes, FIRST, pixelByteSize);
 
+            Pixel[] pixels = new Pixel[MAX_NUMBER_OF_FILTER_PARAMETERS];
 
-        Scanline result = null;
+            Pixel a = null;
+            Pixel b = null;
+            Pixel c = null;
 
+            boolean isFirstPixel = (j == FIRST);
 
+            if (isFirstPixel) {
+                a = NULL_PIXEL;
+                c = NULL_PIXEL;
+            } else {
+                a = pixelList.get(j - 1);
+            }
 
-        return  null;//TODO
+            if (!hasPreviousScanline) {
+                b = NULL_PIXEL;
+                c = NULL_PIXEL;
+            } else {
+                b = previousPixelList.get(j);
+            }
+
+            if(!isFirstPixel && hasPreviousScanline) {
+                c = previousPixelList.get(j - 1);
+            }
+
+            pixels[A] = a;
+            pixels[B] = b;
+            pixels[C] = c;
+
+            byte[] pixelBytes = filter.unfilter(filteredPixelBytes, pixels);
+
+            Pixel pixel = PixelFactory.getPixel(pixelBytes, format);
+            pixelList.add(pixel);
+
+            j++;
+        }
+
+        return  new Scanline(filter, pixelList);
     }
 }
