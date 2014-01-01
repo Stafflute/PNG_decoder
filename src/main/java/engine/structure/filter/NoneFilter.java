@@ -1,20 +1,28 @@
 package engine.structure.filter;
 
 import engine.structure.pixel.Pixel;
+import engine.structure.pixel.format.PixelFormat;
 
 public class NoneFilter implements Filter {
     private static final byte FILTER_TYPE = 0;
 
-    //TODO
+    private static final int FIRST = 0;
 
     @Override
     public byte[] filter(Pixel... pixels) {
-        return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+        int byteSize = pixels[FIRST].getByteSize();
+        byte[] result = new byte[byteSize];
+
+        for(int i = 0; i < byteSize; i++) {
+            result[i] = (byte) pixels[X].getByte(i);
+        }
+
+        return result;
     }
 
     @Override
     public byte[] unfilter(byte[] filteredPixel, Pixel... pixels) {
-        return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return filteredPixel;
     }
 
     @Override

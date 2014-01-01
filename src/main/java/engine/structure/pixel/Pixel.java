@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import static util.ByteConverter.*;
 
-public abstract class Pixel implements Iterable<Integer> {
+public abstract class Pixel {
     protected final byte[] source;
     protected final PixelFormat format;
 
@@ -29,7 +29,7 @@ public abstract class Pixel implements Iterable<Integer> {
     }
 
     public int getByte(int physicalPosition) {
-        return source[physicalPosition];
+        return toInt(source[physicalPosition]);
     }
 
     protected void setSourceContent(long intensity, int channelPos) {
@@ -47,32 +47,5 @@ public abstract class Pixel implements Iterable<Integer> {
         System.arraycopy(source, channelPos * depthByteSize, channelBytes, 0, channelBytes.length);
 
         return toLong(channelBytes);
-    }
-
-    public Iterator<Integer> iterator() {
-        return new PixelIterator(source);
-    }
-
-    private class PixelIterator implements Iterator<Integer> {
-        private  int i = -1;
-
-        public PixelIterator(byte[] source) {
-        }
-
-        @Override
-        public boolean hasNext() {
-            return i < source.length;
-        }
-
-        @Override
-        public Integer next() {
-            i++;
-            return toInt(source[i]);
-        }
-
-        @Override
-        public void remove() {
-           //not implemented yet
-        }
     }
 }
