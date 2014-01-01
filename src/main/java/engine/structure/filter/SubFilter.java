@@ -3,7 +3,7 @@ package engine.structure.filter;
 import engine.structure.pixel.Pixel;
 
 public class SubFilter implements Filter {
-    private static final byte FILTER_TYPE = 1;
+    public static final byte FILTER_TYPE = 1;
 
     @Override
     public byte[] filter(Pixel... pixels) {

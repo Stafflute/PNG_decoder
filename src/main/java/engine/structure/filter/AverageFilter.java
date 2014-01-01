@@ -3,7 +3,7 @@ package engine.structure.filter;
 import engine.structure.pixel.Pixel;
 
 public class AverageFilter implements Filter {
-    private static final byte FILTER_TYPE = 3;
+    public static final byte FILTER_TYPE = 3;
 
     @Override
     public byte[] filter(Pixel... pixels) {

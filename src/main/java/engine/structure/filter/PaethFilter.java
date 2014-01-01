@@ -3,7 +3,7 @@ package engine.structure.filter;
 import engine.structure.pixel.Pixel;
 
 public class PaethFilter implements Filter {
-    private static final byte FILTER_TYPE = 4;
+    public static final byte FILTER_TYPE = 4;
 
     @Override
     public byte[] filter(Pixel... pixels) {
