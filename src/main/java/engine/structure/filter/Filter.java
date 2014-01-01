@@ -17,4 +17,5 @@ public interface Filter {
     public final static int MAX_NUMBER_OF_FILTER_PARAMETERS = 4;
 
     public static final int FIRST = 0;
+    public static final int BYTE_BASE = 256;
 }
