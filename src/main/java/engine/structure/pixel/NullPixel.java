@@ -4,7 +4,9 @@ public class NullPixel extends Pixel{
 
     public final static Pixel NULL_PIXEL = new NullPixel();
 
-    private NullPixel() {}
+    private NullPixel() {
+        super(null, null);
+    }
 
     @Override
     public byte[] getCode() {
