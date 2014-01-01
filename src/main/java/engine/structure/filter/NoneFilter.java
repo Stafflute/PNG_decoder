@@ -1,12 +1,9 @@
 package engine.structure.filter;
 
 import engine.structure.pixel.Pixel;
-import engine.structure.pixel.format.PixelFormat;
 
 public class NoneFilter implements Filter {
     private static final byte FILTER_TYPE = 0;
-
-    private static final int FIRST = 0;
 
     @Override
     public byte[] filter(Pixel... pixels) {

@@ -15,4 +15,6 @@ public interface Filter {
     public static final int C = 3;
 
     public final static int MAX_NUMBER_OF_FILTER_PARAMETERS = 4;
+
+    public static final int FIRST = 0;
 }
