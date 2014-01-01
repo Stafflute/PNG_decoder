@@ -7,9 +7,14 @@ public abstract class Pixel {
     protected final byte[] source;
     protected final PixelFormat format;
 
-    protected Pixel(PixelFormat format) {
+    public Pixel(PixelFormat format) {
         this.format = format;
         this.source = new byte[format.getPixelByteSize()];
+    }
+
+    public Pixel(PixelFormat format, byte[] source) {
+        this.format = format;
+        this.source = source;
     }
 
     public byte[] getCode() {

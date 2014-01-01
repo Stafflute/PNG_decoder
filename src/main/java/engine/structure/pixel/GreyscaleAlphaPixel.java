@@ -6,8 +6,12 @@ public class GreyscaleAlphaPixel extends GreyscalePixel {
 
     protected final static int ALPHA_POSITION = 1;
 
-    protected GreyscaleAlphaPixel(PixelFormat format) {
+    public GreyscaleAlphaPixel(PixelFormat format) {
         super(format);
+    }
+
+    public GreyscaleAlphaPixel(PixelFormat format, byte[] source) {
+        super(format, source);
     }
 
     public void setAlpha(long intensity) {

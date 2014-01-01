@@ -6,8 +6,12 @@ public class GreyscalePixel extends Pixel {
 
     protected final static int GREY_POSITION = 0;
 
-    protected GreyscalePixel(PixelFormat format) {
+    public GreyscalePixel(PixelFormat format) {
         super(format);
+    }
+
+    public GreyscalePixel(PixelFormat format, byte[] source) {
+        super(format, source);
     }
 
     public void setBrightness(long intensity) {

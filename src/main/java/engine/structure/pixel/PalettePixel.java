@@ -7,8 +7,12 @@ public class PalettePixel extends Pixel {
 
     protected final static int PALETTE_POSITION = 0;
 
-    protected PalettePixel(PixelFormat format) {
+    public PalettePixel(PixelFormat format) {
         super(format);
+    }
+
+    public PalettePixel(PixelFormat format, byte[] source) {
+        super(format, source);
     }
 
     public void setPalette(long palette) {

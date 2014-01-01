@@ -10,8 +10,12 @@ public class TruecolorPixel extends Pixel {
 
     protected final static int BLUE_POSITION = 2;
 
-    protected TruecolorPixel(PixelFormat format) {
+    public TruecolorPixel(PixelFormat format) {
         super(format);
+    }
+
+    public TruecolorPixel(PixelFormat format, byte[] source) {
+        super(format, source);
     }
 
     public void setRed(long intensity) {

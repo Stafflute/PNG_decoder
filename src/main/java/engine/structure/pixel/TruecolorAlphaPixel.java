@@ -6,8 +6,12 @@ public class TruecolorAlphaPixel extends TruecolorPixel {
 
     protected final static int ALPHA_POSITION = 4;
 
-    protected TruecolorAlphaPixel(PixelFormat format) {
+    public TruecolorAlphaPixel(PixelFormat format) {
         super(format);
+    }
+
+    public TruecolorAlphaPixel(PixelFormat format, byte[] source) {
+        super(format, source);
     }
 
     public void setAlpha(long intensity) {
