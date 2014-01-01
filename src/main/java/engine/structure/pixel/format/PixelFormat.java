@@ -6,7 +6,7 @@ public class PixelFormat {
     public final ColorType colorType;
     public final int depth;
 
-    private final int depthByteSize;
+    public final int depthByteSize;
 
     private final static int BIT16 = 16;
     private final static int BIT16_SIZE_MULTIPLIER = 2;
@@ -24,7 +24,7 @@ public class PixelFormat {
         }
     }
 
-    public int getByteSize() {
+    public int getPixelByteSize() {
         return colorType.byteSize * depthByteSize;
     }
 

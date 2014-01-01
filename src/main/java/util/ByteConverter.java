@@ -8,13 +8,19 @@ public class ByteConverter {
 
     private static final int BYTE_LONG_LENGTH = 4;
 
+    private static final int BYTE_SHORT_LENGTH = 2;
+
     private static final int UNSIGNED_FACTOR = 0xFF;
 
     private static final long MSB_PLACE_LONG = 0xFF000000;
 
+    private static final long MSB_PLACE_SHORT = 0x0000FF00;
+
     private static final int BYTE_MOVER = 8;
 
     private static final int TO_SHIFT_RIGHT_LONG = BYTE_MOVER * 3;
+
+    private static final int TO_SHIFT_RIGHT_SHORT = BYTE_MOVER;
 
     public static BigInteger toNumber(byte[] bytes) {
         return new BigInteger(bytes);
@@ -35,6 +41,18 @@ public class ByteConverter {
             int toShiftLeft = i * BYTE_MOVER;
             long partialResult = (aLong << toShiftLeft) & MSB_PLACE_LONG;
             result[i] = (byte) (partialResult >> TO_SHIFT_RIGHT_LONG);
+        }
+
+        return  result;
+    }
+
+    public static byte[] to2Byte(long aLong) {
+        byte[] result = new byte[BYTE_SHORT_LENGTH];
+
+        for(int i = 0; i < result.length; i++) {
+            int toShiftLeft = i * BYTE_MOVER;
+            long partialResult = (aLong << toShiftLeft) & MSB_PLACE_SHORT;
+            result[i] = (byte) (partialResult >> TO_SHIFT_RIGHT_SHORT);
         }
 
         return  result;

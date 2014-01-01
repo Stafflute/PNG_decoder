@@ -97,7 +97,7 @@ public class Scanline {
         byte filterByte = bytes[FILTER_BYTE_POSITION];
         Filter filter = FilterFactory.getFilter(filterByte);
 
-        int pixelByteSize = format.getByteSize();
+        int pixelByteSize = format.getPixelByteSize();
 
         List<Pixel> pixelList = new ArrayList<>();
 
